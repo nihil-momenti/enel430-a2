@@ -1,0 +1,132 @@
+\documentclass[a4paper,12pt]{article}
+
+\usepackage{amsmath}
+\usepackage{hyperref}
+\usepackage{graphicx}
+\usepackage[margin=1in]{geometry}
+
+\usepackage[T1]{fontenc}
+\usepackage{tgschola}
+
+\title{
+  \centering
+  \flushright\footnotesize\today\\
+  \centering
+  \rule{\textwidth}{1.6pt}\vspace*{-\baselineskip}\vspace*{2pt}
+  \rule{\textwidth}{0.4pt}\\[\baselineskip]
+  {\Huge \scshape
+    Rocket-ina-Tunnel\\[10pt]
+  }
+  \rule{\textwidth}{0.4pt}\vspace*{-\baselineskip}\vspace*{3.2pt}
+  \rule{\textwidth}{1.6pt}\\[0.5\baselineskip]
+  {\scshape \large
+    ENEL430 Assignment Two\\
+  }
+}
+
+\author{
+  \vspace*{0.5\baselineskip}
+  {\Large
+    {\scshape Wim Looman} (\emph{92692734})\\
+    \href{mailto:wgl18@uclive.ac.nz}{wgl18@uclive.ac.nz}\\
+  }
+}
+
+\date{}
+
+\begin{document}
+
+  \maketitle
+
+  \section{Introduction}
+
+    In order to correctly design controllers for complex systems such as a
+    rocket an accurate model must be created.  One major method for creating
+    this model is known as System Identification.  System Identification is
+    about utilising statistical methods to build mathematical models of
+    dynamical systems from measured data.
+
+    The system used in this report consisted of a vertical wind tunnel
+    containing a 1.4m long rocket suspended by a string.  This allowed the
+    rocket to freely rotate with negligible extraneous damping while wind flowed
+    past at up to 110 km/hr.
+
+    The form of the model in relation to the roll rate ($\dot\theta$) was found to be:
+
+    \begin{equation}
+      \ddot\theta = -a_\text{final}\dot\theta + b_\text{final} u_\text{f} + f_0
+    \end{equation}
+
+    With the measured fin angle ($u_\text{f}$) obeying a non-linear function ($F$) in
+    terms of the commanded fin angle ($u_\text{cmd}$).
+
+    \begin{equation}
+      u_\text{f} = F\left(u_\text{cmd}\right)
+    \end{equation}
+
+    \begin{equation}
+      u_\text{cmd} = k_p \left(R_\theta - \theta\right) + k_d \left(-\dot\theta\right)
+    \end{equation}
+
+    $R_\theta$ is the set point for the controller.
+
+    This can be converted into a more detailed model:
+
+    \begin{equation}
+      \ddot\theta = -a_\text{final}\dot\theta + b_\text{final} y_1 + f_0
+    \end{equation}
+
+    \begin{equation}
+      \dot u_\text{cmd} = -k_p \dot\theta - k_d \ddot\theta
+    \end{equation}
+
+    \begin{equation}
+      \dot y_1 = y_2
+    \end{equation}
+
+    \begin{equation}
+      \dot y_2 = -C_1 y_2 - K_1 y_1 + C_2 \left(-k_p \dot\theta - k_d \ddot\theta \right) + K_2 \left( k_p \left( R_\theta - \theta \right) - k_d r \right)
+    \end{equation}
+
+  \section{Results and Discussion}
+
+    With this model three controllers were designed.  The first was designed
+    with a relatively high $k_p$ gain and low $k_d$ gain in order to induce
+    oscillations.  The second was aimed at an optimal response and the third was
+    another attempt at an optimal response with higher gains.
+
+    Figure \ref{fig:one} shows the response of the first controller.  The model
+    appears to have much less damping than the measured data.
+
+    Figure \ref{fig:two} shows the response of the second controller, this is
+    much better than the first.  In fact the error in the model is less than 2\%
+    compared to over 20\% for the first model.
+
+    Figure \ref{fig:three} shows the response of the third controller.  This
+    is not as good as the second controller -- at around 6\% error -- but it is
+    still much better than the first one.
+
+    \begin{figure*}
+      \centering
+      \includegraphics[width=\textwidth]{one}
+      \caption{Response of first controller}
+      \label{fig:one}
+    \end{figure*}
+
+    \begin{figure*}
+      \centering
+      \includegraphics[width=\textwidth]{two}
+      \caption{Response of second controller}
+      \label{fig:two}
+    \end{figure*}
+
+    \begin{figure*}
+      \centering
+      \includegraphics[width=\textwidth]{three}
+      \caption{Response of third controller}
+      \label{fig:three}
+    \end{figure*}
+
+  \section{Conclusion}
+
+\end{document}
